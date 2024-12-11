@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import dorf from "./pages/dorf/index.vue";
+// import dorf from "./pages/dorf/index.vue";
+import mineSweeper from "./pages/minesweeper/index.vue";
 </script>
 
 <template>
   <div class="container mx-auto">
-    <dorf></dorf>
+    <!-- <dorf></dorf> -->
+    <mine-sweeper></mine-sweeper>
   </div>
 </template>
 
