@@ -1,9 +1,30 @@
 <template>
     <div class="text-black">
 
-<div class="flex">
-    <section id="mineSweeperSetup" class="container shadow-2xl p-4  rounded-md">
-        <button @click="newGame" class="text-black">New</button>
+    <section id="mineSweeperProgress" class="container shadow-2xl  basis-1/2 px-2 mt-4" >   
+        <div class="flex flex-row justify-evenly w-full py-2">
+            <div>Found</div>
+            <lcdElt :number="nbflags.nbflags" class="w-16"/>
+            <div>/ Total</div>
+            <lcdElt :number="nbMines" :nbdigit="1" class="w-16"/>
+        </div>
+        <div class="bg-gray-400 rounded-2xl">
+            <div class="bg-green-400 rounded-2xl" style="height:24px" :style="`width:${Math.round(nbflags.nbflags/nbflags.nbMines*100)}%`"></div>
+        </div>
+        
+        <div class="flex justify-evenly">
+            <button @click="newGame" class="text-black">New</button>
+            <button @click="showOptions=!showOptions" class="text-black">Options</button>
+        </div>
+        
+        <div class="h-40">
+            <div v-if="kaboom" class="mx-auto w-32 h-40 py-2">
+                <img src="mine.svg" alt="" class=" bg-red-600  rounded-2xl" >
+            </div>
+        </div>
+    </section>
+
+    <section id="mineSweeperSetup" v-show="showOptions" class="container shadow-2xl p-4  rounded-md">
         <div class="flex">
             <div>number of mines</div>
             <input type="number" v-model="nbMines"/>
@@ -19,24 +40,6 @@
     </section> 
 
 
-    <section id="mineSweeperProgress" class="container shadow-2xl  basis-1/2 px-2 mt-4" >   
-        <div class="flex flex-row justify-evenly w-full py-2">
-            <div>Found</div>
-            <lcdElt :number="nbflags.nbflags" class="w-16"/>
-            <div>/ Total</div>
-            <lcdElt :number="nbMines" :nbdigit="1" class="w-16"/>
-        </div>
-        <div class="bg-gray-400 rounded-2xl">
-            <div class="bg-green-400 rounded-2xl" style="height:24px" :style="`width:${Math.round(nbflags.nbflags/nbflags.nbMines*100)}%`"></div>
-        </div>
-        <div class="h-40">
-            <div v-if="kaboom" class="mx-auto w-32 h-40 py-2">
-                <img src="mine.svg" alt="" class=" bg-red-600  rounded-2xl" >
-            </div>
-        </div>
-        <scoreboard></scoreboard>
-    </section>
-</div>
 
 
 <div class="w-96 mx-auto">
@@ -81,23 +84,19 @@
 import { computed, nextTick, onMounted, ref } from 'vue';
 import gridmanager from './gridmanager'
 import lcdElt from '../../components/lcdElt.vue'
-import lcdDigit from '../../components/lcdDigit.vue';
 const mineFieldDimension={rows:20,cols:10,nbMines:10}
 
-const tablesize=ref({x:mineFieldDimension.rows,y:mineFieldDimension.cols})
+// const tablesize=ref({x:mineFieldDimension.rows,y:mineFieldDimension.cols})
 const grid=new gridmanager({cols:mineFieldDimension.cols,rows:mineFieldDimension.rows,nbMines:mineFieldDimension.nbMines})
 console.log(grid)
 const Mine=ref(grid)
 const colonne=ref(0)
 const ligne=ref(0)
 const kaboom=ref(false)
-const debug=ref(true)
 const nbMines=ref(mineFieldDimension.nbMines)
 const sizeSelector=ref("small")
+const showOptions=ref(true)
 
-const neighbours= computed(()=>{
-    // return grid.isPlacementValid({c:colonne.value,l:ligne.value})
-})
 const setdata=async(row:number,col:number)=>{
     colonne.value=col
     ligne.value=row
