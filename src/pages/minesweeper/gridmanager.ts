@@ -65,6 +65,15 @@ export default class GRIDMANAGER {
     }
 
     
+    public get colsCount() : number {
+        return this.nbCols
+    }
+    public get rowsCount() : number {
+        return this.nbRows
+    }
+    
+
+    
 
     getNumberOfneighbours(position: { l: number, c: number, }): number {
         const boundaries = [

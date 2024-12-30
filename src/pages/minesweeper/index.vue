@@ -43,16 +43,16 @@
 
 
 <div class="w-96 mx-auto">
-    <div class="grid grid-cols-11 ">
+    <div class="grid"  :style="`grid-template-columns: repeat(${Mine.colsCount+1}, minmax(0, 1fr))`">
         <div >-</div>
-        <div v-for="item in 10"   >
+        <div v-for="item in Mine.colsCount"   >
             {{ item -1}}
         </div>
     </div>
 
     <div v-for="(row,row_id) in Mine.minesFields" :key="row_id" >
         
-        <div class="grid grid-cols-11 h-8">
+        <div class="grid h-[24px]" :style="`grid-template-columns: repeat(${Mine.colsCount+1}, 24px)`">
             <div >{{ row_id }}</div>
             <div v-for="(item, item_id) in row" key:="item_id" class="cursor-pointer border-[1px] border-slate-600" >
 
@@ -60,12 +60,12 @@
         @click.left="setdata(row_id,item_id) "
         @click.right.prevent="setflag( row_id,item_id)" >
         
-            <div v-if="item.discovery=='Hidden'" class="w-8 h-8 hiddenCell" style=""> </div>
-            <div v-if="item.discovery=='Flagged'" class="h-8 hiddenCell "> 
-                <img src="flag.svg" alt="M" class="w-4 mx-auto mt-1">
+            <div v-if="item.discovery=='Hidden'" class="w-[24px] h-[24px] hiddenCell" style=""> </div>
+            <div v-if="item.discovery=='Flagged'" class="h-[24px] hiddenCell "> 
+                <img src="flag.svg" alt="M" class="w-[24px] mx-auto p-1">
             </div>
             <div v-if="item.discovery=='Discovered'" >
-                <img v-if="item.land=='M'" src="mine.svg" alt="M" class="w-4 mx-auto py-2">
+                <img v-if="item.land=='M'" src="mine.svg" alt="M" class="w-[24px] h-[24px] mx-auto py-1">
                 <div v-if="item.land!=0 && item.land!='M'">{{ item.land }}</div>
             </div>
             </div>
@@ -84,7 +84,7 @@
 import { computed, nextTick, onMounted, ref } from 'vue';
 import gridmanager from './gridmanager'
 import lcdElt from '../../components/lcdElt.vue'
-const mineFieldDimension={rows:20,cols:10,nbMines:10}
+const mineFieldDimension={rows:50,cols:15,nbMines:10}
 
 // const tablesize=ref({x:mineFieldDimension.rows,y:mineFieldDimension.cols})
 const grid=new gridmanager({cols:mineFieldDimension.cols,rows:mineFieldDimension.rows,nbMines:mineFieldDimension.nbMines})
@@ -174,6 +174,7 @@ const discoverNeighbours=(row:number,col:number)=>{
         const grid=new gridmanager({cols:mineFieldDimension.cols,rows:mineFieldDimension.rows,nbMines:nbMines.value})
         Mine.value=grid
         kaboom.value=false
+        
     }
 
 const nbflags = computed(()=>{
