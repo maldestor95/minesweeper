@@ -6,11 +6,12 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  background-image: url('/background.png');
+  /* background-image: url('/background.png'); */
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* background-color: #af1f1f; */
+  background-color: #888888;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,7 +26,7 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #484f28;
+  color: #34adbd;
 }
 a:visited{
   color: #2a2a29;
@@ -44,7 +45,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #a83939;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -67,18 +68,12 @@ button:focus-visible {
   /* margin: 0 auto; */
   /* padding: 2rem; */
   text-align: center;
-  color: white;
+  /* color: white; */
 }
-.scoregrid >* {
-  border-color: white;
-  border-width: 2px;
-  border-style: solid;
-  height: 50px;
-}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
   }
   a:hover {
     color: #747bff;

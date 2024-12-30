@@ -13,10 +13,6 @@ export default class GRIDMANAGER {
         this.nbRows = option.rows
         this.minesFields = this.creatEmptyGrid()
         this.prepareMineFields(option.nbMines)
-        // this.minesFields[5][5].land = "M"
-        // this.minesFields[9][2].land = "M"
-        // this.minesFields[0][1].land = "M"
-        // this.setNumberOfneighbours({ l: 4, c: 4 })
 
     }
     private creatEmptyGrid() {
@@ -29,6 +25,7 @@ export default class GRIDMANAGER {
             }
             grid.push(rows)
         }
+
         return grid
     }
     prepareMineFields(nbMines: number): void {
@@ -47,49 +44,27 @@ export default class GRIDMANAGER {
     }
 
     private placeOneMine() {
-        const randomPosition = Math.floor(Math.random() * this.nbCols * this.nbRows)
-        const mineX = Math.floor(randomPosition / this.nbCols)
-        const mineY = randomPosition - mineX * this.nbCols
+        let trialCount=0
+        let isPositionValid=false
+        let mineX = 0
+        let mineY = 0
+        do
+           {
+            const randomPosition = Math.floor(Math.random() * this.nbCols * this.nbRows)
+            mineX = Math.floor(randomPosition / this.nbCols)
+            mineY = randomPosition - mineX * this.nbCols
 
+            if (this.minesFields[mineX][mineY].land != "M") isPositionValid=true
+           }
+        while (trialCount<500 && !isPositionValid )
         return {
             position: { x: mineX, y: mineY },
-            // isPlacementValid: this.isPlacementValid({'c':mineX,'l':mineY-1})
+
+
         }
     }
 
-    isPlacementValid(position: { l: number, c: number }) {
-        const MaximumSurrounding = 4
-
-        let numberOfSurroundingMines = 0
-
-
-        let LsearchOffset: number[] = [-1, 0, 1]
-        let CsearchOffset: number[] = [-1, 0, 1]
-
-        if (position.l > this.nbRows - 2) LsearchOffset = [-1, 0]
-        if (position.l < 1) LsearchOffset = [0, 1]
-
-        if (position.c > this.nbCols - 2) CsearchOffset = [-1, 0]
-        if (position.c < 1) CsearchOffset = [0, 1]
-
-
-
-        const minesFields = this.minesFields
-        CsearchOffset.forEach(y => {
-            LsearchOffset.forEach(x => {
-                try {
-                    // console.log("ici", position,x,y,minesFields[position.l + x ][position.c + y ])
-
-                    // const mineFound = minesFields[position.l + x][position.c + y]=="M"
-                    // if (mineFound ) numberOfSurroundingMines = numberOfSurroundingMines + 1
-                } catch (error) {
-                    console.log("error", position, x, y, this.nbRows, this.nbCols, LsearchOffset, CsearchOffset,)
-                }
-            })
-        })
-
-        return numberOfSurroundingMines
-    }
+    
 
     getNumberOfneighbours(position: { l: number, c: number, }): number {
         const boundaries = [
