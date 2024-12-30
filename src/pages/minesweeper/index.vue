@@ -2,10 +2,10 @@
     <div class="text-black">
 
     <section id="mineSweeperProgress" class="container shadow-2xl  basis-1/2 px-2 mt-4" >   
-        <div class="flex flex-row justify-evenly w-full py-2">
+        <div class="flex flex-row justify-evenly w-96 mx-auto py-2 ">
             <div>Found</div>
             <lcdElt :number="nbflags.nbflags" class="w-16"/>
-            <div>/ Total</div>
+            <div>Total</div>
             <lcdElt :number="nbMines" :nbdigit="1" class="w-16"/>
         </div>
         <div class="bg-gray-400 rounded-2xl">
