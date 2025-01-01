@@ -1,81 +1,87 @@
 <template>
     <div class="text-black">
 
-    <section id="mineSweeperProgress" class="container shadow-2xl  basis-1/2 px-2 mt-4" >   
-        <div class="flex flex-row justify-evenly w-96 mx-auto py-2 ">
-            <div>Found</div>
-            <lcdElt :number="nbflags.nbflags" class="w-16"/>
-            <div>Total</div>
-            <lcdElt :number="nbMines" :nbdigit="1" class="w-16"/>
+    <div class="md:flex flex-row gap-4">
+        <div class="basis-1/4">
+
+            <section id="mineSweeperProgress" class=" basis-1/2 px-2 mt-4" >   
+                <div class="flex flex-row justify-evenly w-full mx-auto py-2 ">
+                    <div>Found</div>
+                    <lcdElt :number="nbflags.nbflags" class="w-16 mr-2"/>
+                    <div>Total</div>
+                    <lcdElt :number="nbMines" :nbdigit="1" class="w-16"/>
+                </div>
+                <div class="bg-gray-400 rounded-2xl my-4">
+                    <div class="bg-green-400 rounded-2xl" style="height:24px" :style="`width:${Math.round(nbflags.nbflags/nbflags.nbMines*100)}%`"></div>
+                </div>
+                
+                <div class="flex justify-evenly">
+                    <button @click="newGame" class="text-black">New</button>
+                    <button @click="showOptions=!showOptions" class="text-black">Options</button>
+                </div>
+                <button class="clearZone" :class="{selectFlag:addFlag}" @click="addFlag=!addFlag"> </button>
+                <div class="h-40">
+                    <div v-if="kaboom" class="mx-auto w-32 h-40 py-2">
+                        <img src="/mine.svg" alt="" class=" bg-red-600  rounded-2xl" >
+                    </div>
+                </div>
+
+            </section>
+
+            <section id="mineSweeperSetup" v-show="showOptions" class=" rounded-md">
+                <div class="flex">
+                    <div>Number of mines</div>
+                    <input type="number" v-model="nbMines" class="mx-2 w-8 rounded-md"/>
+                </div>
+                <div class="text-left">Size</div>
+                <div class="grid grid-cols-[20px,1fr] pl-4">
+                    <input type="radio" name="small" id="" v-model="sizeSelector" value="small" >  
+                    <label for="small" class="text-start ml-2 "> small (10x10-10)</label>
+                    <input type="radio" name="medium" id="" v-model="sizeSelector" value="medium">
+                    <label for="medium" class="text-start ml-2 "> Medium (16x16-40)</label>
+                    <input type="radio" name="large" id="" v-model="sizeSelector" value="large">
+                    <label for="large" class="text-start ml-2 ">large (30x16-99)</label>
+                </div>
+            </section> 
         </div>
-        <div class="bg-gray-400 rounded-2xl">
-            <div class="bg-green-400 rounded-2xl" style="height:24px" :style="`width:${Math.round(nbflags.nbflags/nbflags.nbMines*100)}%`"></div>
-        </div>
-        
-        <div class="flex justify-evenly">
-            <button @click="newGame" class="text-black">New</button>
-            <button @click="showOptions=!showOptions" class="text-black">Options</button>
-        </div>
-        
-        <div class="h-40">
-            <div v-if="kaboom" class="mx-auto w-32 h-40 py-2">
-                <img src="mine.svg" alt="" class=" bg-red-600  rounded-2xl" >
+
+        <div class="grow">
+            <div class="w-full mx-auto">
+                <div class="grid"  :style="`grid-template-columns: repeat(${Mine.colsCount+1}, 24px)`">
+                    <div >-</div>
+                    <div v-for="item in Mine.colsCount"   >
+                        {{ item -1}}
+                    </div>
+                </div>
+
+                <div v-for="(row,row_id) in Mine.minesFields" :key="row_id" >
+                    
+                    <div class="grid h-[24px]" :style="`grid-template-columns: repeat(${Mine.colsCount+1}, 24px)`">
+                        <div >{{ row_id }}</div>
+                        <div v-for="(item, item_id) in row" key:="item_id" class="cursor-pointer border-[1px] border-slate-600" >
+
+                <div
+                    @click.left="addFlag?setflag( row_id,item_id):setdata(row_id,item_id) "
+                    @click.right.prevent="setflag( row_id,item_id)" >
+                    
+                        <div v-if="item.discovery=='Hidden'" class="w-[24px] h-[24px] hiddenCell" style=""> </div>
+                        <div v-if="item.discovery=='Flagged'" class="h-[24px] hiddenCell "> 
+                            <img src="/flag.svg" alt="M" class="w-[24px] mx-auto p-1">
+                        </div>
+                        <div v-if="item.discovery=='Discovered'" >
+                            <img v-if="item.land=='M'" src="/mine.svg" alt="M" class="w-[24px] h-[24px] mx-auto py-1">
+                            <div v-if="item.land!=0 && item.land!='M'">{{ item.land }}</div>
+                        </div>
+                        </div>
+                </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
-    </section>
-
-    <section id="mineSweeperSetup" v-show="showOptions" class="container shadow-2xl p-4  rounded-md">
-        <div class="flex">
-            <div>number of mines</div>
-            <input type="number" v-model="nbMines"/>
-        </div>
-            <div class="grid grid-cols-[20px,100px] ">
-                <input type="radio" name="small" id="" v-model="sizeSelector" value="small" >  
-                <label for="small" class="text-start ml-2 "> small</label>
-                <input type="radio" name="medium" id="" v-model="sizeSelector" value="medium">
-                <label for="medium" class="text-start ml-2 "> Medium</label>
-                <input type="radio" name="large" id="" v-model="sizeSelector" value="large">
-                <label for="large" class="text-start ml-2 ">large</label>
-            </div>
-    </section> 
-
-
-
-
-<div class="w-96 mx-auto">
-    <div class="grid"  :style="`grid-template-columns: repeat(${Mine.colsCount+1}, minmax(0, 1fr))`">
-        <div >-</div>
-        <div v-for="item in Mine.colsCount"   >
-            {{ item -1}}
-        </div>
-    </div>
-
-    <div v-for="(row,row_id) in Mine.minesFields" :key="row_id" >
-        
-        <div class="grid h-[24px]" :style="`grid-template-columns: repeat(${Mine.colsCount+1}, 24px)`">
-            <div >{{ row_id }}</div>
-            <div v-for="(item, item_id) in row" key:="item_id" class="cursor-pointer border-[1px] border-slate-600" >
-
-       <div
-        @click.left="setdata(row_id,item_id) "
-        @click.right.prevent="setflag( row_id,item_id)" >
-        
-            <div v-if="item.discovery=='Hidden'" class="w-[24px] h-[24px] hiddenCell" style=""> </div>
-            <div v-if="item.discovery=='Flagged'" class="h-[24px] hiddenCell "> 
-                <img src="flag.svg" alt="M" class="w-[24px] mx-auto p-1">
-            </div>
-            <div v-if="item.discovery=='Discovered'" >
-                <img v-if="item.land=='M'" src="mine.svg" alt="M" class="w-[24px] h-[24px] mx-auto py-1">
-                <div v-if="item.land!=0 && item.land!='M'">{{ item.land }}</div>
-            </div>
-            </div>
-       </div>
         </div>
     </div>
 
 </div>
-
- </div>
 
 
 </template>
@@ -96,6 +102,7 @@ const kaboom=ref(false)
 const nbMines=ref(mineFieldDimension.nbMines)
 const sizeSelector=ref("small")
 const showOptions=ref(true)
+const addFlag=ref(true)
 
 const setdata=async(row:number,col:number)=>{
     colonne.value=col
@@ -171,7 +178,29 @@ const discoverNeighbours=(row:number,col:number)=>{
         newGame()
     })
     const newGame=()=>{
-        const grid=new gridmanager({cols:mineFieldDimension.cols,rows:mineFieldDimension.rows,nbMines:nbMines.value})
+        switch (sizeSelector.value) {
+            case "small":
+                    mineFieldDimension.cols=10;
+                    mineFieldDimension.rows=10;
+                    mineFieldDimension.nbMines=10
+                    break;
+            case "medium":
+                    mineFieldDimension.cols=16;
+                    mineFieldDimension.rows=16;
+                    mineFieldDimension.nbMines=40
+            break;
+
+            case "large":
+                    mineFieldDimension.cols=30;
+                    mineFieldDimension.rows=16;
+                    mineFieldDimension.nbMines=99
+            break;
+
+            default:
+                break;
+        }
+        const grid=new gridmanager({cols:mineFieldDimension.cols,rows:mineFieldDimension.rows,nbMines:mineFieldDimension.nbMines})
+        nbMines.value=mineFieldDimension.nbMines
         Mine.value=grid
         kaboom.value=false
         
@@ -196,4 +225,24 @@ const nbflags = computed(()=>{
     border: outset;
     @apply bg-slate-300 border-4
 }
+
+.clearZone {
+    position: fixed;
+
+    background-image: url('/public/shovel.svg');
+        background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    @apply bg-slate-400 h-12 w-12 border-none;
+    @apply top-1 right-1
+}
+.selectFlag {
+    background-image: url('/public/flag.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    @apply bg-slate-500
+}
+
+
 </style>
