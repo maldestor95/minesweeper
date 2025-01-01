@@ -9,7 +9,7 @@
   /* background-image: url('/background.png'); */
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: rgba(0, 0, 0, 0.87);
   /* background-color: #af1f1f; */
   background-color: #888888;
 
@@ -45,7 +45,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #a83939;
+  background-color: #c4b4b4;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -70,10 +70,9 @@ button:focus-visible {
   text-align: center;
   /* color: white; */
 }
-
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    @apply text-slate-500
   }
   a:hover {
     color: #747bff;
@@ -81,4 +80,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} 
