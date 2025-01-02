@@ -13,7 +13,7 @@
 import lcdDigit from './lcdDigit.vue';
 interface Props {
   number: number;
-  nbDigits: number
+  nbDigits?: number
 }
 const props = withDefaults(defineProps<Props>(), {
   number: 1258,

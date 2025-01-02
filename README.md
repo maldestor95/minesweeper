@@ -10,5 +10,5 @@ execute in CLI, on a master branch
 
 
 # Roadmap:
+V1.0 minesweeper
 - snake
-- minesweeper
