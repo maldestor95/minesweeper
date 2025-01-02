@@ -1,81 +1,91 @@
 <template>
-    <div class="md:flex flex-row gap-4">
-        <!-- SETUP & SCORE -->
-        <div class="basis-1/4 bg-yellow-100">
-            <section id="mineSweeperProgress" class="px-2 mt-4">
-                <div class="flex flex-row justify-evenly w-full mx-auto py-2 ">
-                    <div>Found</div>
-                    <lcdElt :number="nbflags.nbflags" class="w-16 mr-2" />
-                    <div>Total</div>
-                    <lcdElt :number="nbMines" :nbdigit="1" class="w-16" />
-                </div>
-                <div class="bg-gray-400 rounded-2xl my-4">
-                    <div class="bg-green-400 rounded-2xl" style="height:24px"
-                        :style="`width:${Math.round(nbflags.nbflags / nbflags.nbMines * 100)}%`"></div>
-                </div>
+    <div class="container mx-auto ">
+        <div class="md:flex flex-row gap-4 ">
+            <!-- SETUP & SCORE -->
+            <div class="basis-1/4">
+                <section id="mineSweeperProgress" class="px-2 ">
+                    <div class="sticky md:static flex flex-row gap-1">
 
-                <div class="flex justify-evenly">
-                    <button @click="newGame" class="text-black">New</button>
-                    <button @click="showOptions = !showOptions" class="text-black">Options</button>
-                </div>
-                <button class="clearZone" :class="{ selectFlag: addFlag }" @click="addFlag = !addFlag"> </button>
-                <div class="h-40">
-                    <div v-if="kaboom" class="mx-auto w-32 h-40 py-2">
-                        <img src="/mine.svg" alt="" class=" bg-red-600  rounded-2xl">
+                        <modal v-model="showMenu" >
+                            <template #command>
+                                <button @click="showMenu=true" class="w-8 p-0 m-0 my-2"> 
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                                    </svg>
+                                </button>
+                            </template>
+                        <section id="mineSweeperSetup" v-show="showOptions" class=" rounded-md relative">
+                            <span class="cursor-pointer absolute -top-2 right-0 font-bold h-[28px]" @click="showMenu = false">&times;</span>
+                            <div class="text-left">Size</div>
+                            <div class="grid grid-cols-[20px,1fr] pl-4">
+                                <input type="radio" name="small" id="" v-model="sizeSelector" value="small">
+                                <label for="small" class="text-start ml-2 "> small (10x10-10)</label>
+                                <input type="radio" name="medium" id="" v-model="sizeSelector" value="medium">
+                                <label for="medium" class="text-start ml-2 "> Medium (16x16-40)</label>
+                                <input type="radio" name="large" id="" v-model="sizeSelector" value="large">
+                                <label for="large" class="text-start ml-2 ">large (30x16-99)</label>
+                            </div>
+                            <button @click="newGame();showMenu=false" class="text-black">New</button>
+                        </section>
+                        </modal>
+
+                        <div class="flex flex-row w-full mx-auto py-2 gap-1 ">
+                            <div>Found</div>
+                            <lcdElt :number="nbflags.nbflags" class="w-16 mr-2" />
+                            <div>Total</div>
+                            <lcdElt :number="nbMines" :nbdigit="1" class="w-16" />
+                        </div>
+                        <button class="clearZone" :class="{ selectFlag: addFlag }" @click="addFlag = !addFlag"> </button>
                     </div>
-                </div>
-            </section>
 
-            <section id="mineSweeperSetup" v-show="showOptions" class=" rounded-md">
-                <div class="flex">
-                    <div>Number of mines</div>
-                    <input type="number" v-model="nbMines" class="mx-2 w-8 rounded-md" />
+                    <div class="bg-gray-400 rounded-2xl my-4">
+                        <div class="bg-green-400 rounded-2xl" style="height:24px"
+                            :style="`width:${Math.round(nbflags.nbflags / nbflags.nbMines * 100)}%`"></div>
+                    </div>
+                </section>
+                
+                <div v-if="kaboom" class="mx-auto w-32 h-40 py-2">
+                    <img src="/mine.svg" alt="" class=" bg-red-600  rounded-2xl">
                 </div>
-                <div class="text-left">Size</div>
-                <div class="grid grid-cols-[20px,1fr] pl-4">
-                    <input type="radio" name="small" id="" v-model="sizeSelector" value="small">
-                    <label for="small" class="text-start ml-2 "> small (10x10-10)</label>
-                    <input type="radio" name="medium" id="" v-model="sizeSelector" value="medium">
-                    <label for="medium" class="text-start ml-2 "> Medium (16x16-40)</label>
-                    <input type="radio" name="large" id="" v-model="sizeSelector" value="large">
-                    <label for="large" class="text-start ml-2 ">large (30x16-99)</label>
-                </div>
-            </section>
-        </div>
-
-        <!-- MINEFIELD -->
-        <div class="mx-auto">
-            <div class="grid" :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
-                <div>-</div>
-                <div v-for="item in Mine.colsCount">
-                    {{ item - 1 }}
-                </div>
+                
+                
             </div>
 
-            <div v-for="(row, row_id) in Mine.minesFields" :key="row_id">
+            <!-- MINEFIELD -->
+            <div class="mineField">
+                
+                <div class="grid " :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
+                    <div>-</div>
+                    <div v-for="item in Mine.colsCount">
+                        {{ item - 1 }}
+                    </div>
+                </div>
 
-                <div class="grid h-[24px]" :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
-                    <div>{{ row_id }}</div>
-                    <div v-for="(item, item_id) in row" key:="item_id"
-                        class="cursor-pointer border-[1px] border-slate-600">
+                <div v-for="(row, row_id) in Mine.minesFields" :key="row_id">
 
-                        <div @click.left="addFlag ? setflag(row_id, item_id) : setdata(row_id, item_id)"
-                            @click.right.prevent="setflag(row_id, item_id)">
+                    <div class="grid h-[24px]" :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
+                        <div>{{ row_id }}</div>
+                        <div v-for="(item, item_id) in row" key:="item_id"
+                            class="cursor-pointer border-[1px] border-slate-600">
 
-                            <div v-if="item.discovery == 'Hidden'" class="w-[24px] h-[24px] hiddenCell" style="">
-                            </div>
-                            <div v-if="item.discovery == 'Flagged'" class="h-[24px] hiddenCell ">
-                                <img src="/flag.svg" alt="M" class="w-[24px] mx-auto p-1">
-                            </div>
-                            <div v-if="item.discovery == 'Discovered'">
-                                <img v-if="item.land == 'M'" src="/mine.svg" alt="M"
-                                    class="w-[24px] h-[24px] mx-auto py-1">
-                                <div v-if="item.land != 0 && item.land != 'M'">{{ item.land }}</div>
+                            <div @click.left="addFlag ? setflag(row_id, item_id) : setdata(row_id, item_id)"
+                                @click.right.prevent="setflag(row_id, item_id)">
+
+                                <div v-if="item.discovery == 'Hidden'" class="w-[24px] h-[24px] hiddenCell" style="">
+                                </div>
+                                <div v-if="item.discovery == 'Flagged'" class="h-[24px] hiddenCell ">
+                                    <img src="/flag.svg" alt="M" class="w-[24px] mx-auto p-1">
+                                </div>
+                                <div v-if="item.discovery == 'Discovered'">
+                                    <img v-if="item.land == 'M'" src="/mine.svg" alt="M"
+                                        class="w-[24px] h-[24px] mx-auto py-1">
+                                    <div v-if="item.land != 0 && item.land != 'M'">{{ item.land }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
@@ -85,9 +95,9 @@
 import { computed, nextTick, onMounted, ref } from 'vue';
 import gridmanager from './gridmanager'
 import lcdElt from '../../components/lcdElt.vue'
+import modal from '../../components/modal.vue'
 const mineFieldDimension = { rows: 50, cols: 15, nbMines: 10 }
 
-// const tablesize=ref({x:mineFieldDimension.rows,y:mineFieldDimension.cols})
 const grid = new gridmanager({ cols: mineFieldDimension.cols, rows: mineFieldDimension.rows, nbMines: mineFieldDimension.nbMines })
 console.log(grid)
 const Mine = ref(grid)
@@ -97,6 +107,7 @@ const kaboom = ref(false)
 const nbMines = ref(mineFieldDimension.nbMines)
 const sizeSelector = ref("small")
 const showOptions = ref(true)
+const showMenu= ref(false)
 const addFlag = ref(true)
 
 const setdata = async (row: number, col: number) => {
@@ -169,8 +180,8 @@ const discoverNeighbours = (row: number, col: number) => {
 
 onMounted(() => {
     newGame();
-    document.title='MineSweeper';
-    const faviconLink=document.querySelector("link[rel='icon']") as HTMLLinkElement
+    document.title = 'MineSweeper';
+    const faviconLink = document.querySelector("link[rel='icon']") as HTMLLinkElement
     if (faviconLink) faviconLink.href = "/mine_flavico.svg";
 })
 const newGame = () => {
@@ -223,14 +234,14 @@ const nbflags = computed(() => {
 }
 
 .clearZone {
-    position: fixed;
+    position: sticky;
 
     background-image: url('/public/shovel.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: 50%;
     @apply bg-slate-400 h-12 w-12 border-none;
-    @apply top-1 right-1
+    @apply top-1 left-1
 }
 
 .selectFlag {

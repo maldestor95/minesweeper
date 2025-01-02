@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "markdown-it": "^13.0.1",
-    "vue": "^3.3.4",
+    "vue": "^3.5.13",
     "yaml": "^2.3.1"
   },
   "devDependencies": {
@@ -20,7 +20,7 @@
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
+    "vite": "^4.5.5",
     "vue-tsc": "^1.8.5"
   }
 }
