@@ -89,6 +89,8 @@
             </div>
         </div>
     </div>
+    
+    <timerCard v-model="reset" class="pt-8" ></timerCard>
 </template>
 
 <script setup lang="ts">
@@ -96,6 +98,7 @@ import { computed, nextTick, onMounted, ref } from 'vue';
 import gridmanager from './gridmanager'
 import lcdElt from '../../components/lcdElt.vue'
 import modal from '../../components/modal.vue'
+import timerCard from '../../components/timer/timerCard.vue';
 const mineFieldDimension = { rows: 50, cols: 15, nbMines: 10 }
 
 const grid = new gridmanager({ cols: mineFieldDimension.cols, rows: mineFieldDimension.rows, nbMines: mineFieldDimension.nbMines })
@@ -109,6 +112,7 @@ const sizeSelector = ref("small")
 const showOptions = ref(true)
 const showMenu= ref(false)
 const addFlag = ref(true)
+const reset = ref(false)
 
 const setdata = async (row: number, col: number) => {
     colonne.value = col
@@ -210,6 +214,7 @@ const newGame = () => {
     nbMines.value = mineFieldDimension.nbMines
     Mine.value = grid
     kaboom.value = false
+    reset.value=true
 
 }
 
