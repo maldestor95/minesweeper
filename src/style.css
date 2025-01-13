@@ -22,14 +22,14 @@
 
 a {
   font-weight: 500;
-  color: #ffffff;
+  color: #161616;
   text-decoration: inherit;
 }
 a:hover {
-  color: #34adbd;
+  color: #358c97;
 }
 a:visited{
-  color: #2a2a29;
+  color: #b6b62c;
 }
 h1 {
   font-size: 3.2em;
@@ -58,7 +58,9 @@ button:focus-visible {
 .card {
   padding: 2em;
 }
-
+.debug {
+  @apply border-red-400 border-2;
+}
 #app {
   /* max-width: 1280px; */
   /* margin: 0 auto; */

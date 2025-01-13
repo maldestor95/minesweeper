@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto ">
+    <div class="container mx-auto">
         <div class="md:flex flex-row gap-4 ">
             <!-- SETUP & SCORE -->
             <div class="basis-1/4">
