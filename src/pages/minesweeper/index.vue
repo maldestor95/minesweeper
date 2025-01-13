@@ -1,19 +1,14 @@
 <template>
     <div class="container mx-auto">
-        <div class="md:flex flex-row gap-4 ">
+        <div class="md:flex flex-row gap-4 flex-row-reverse">
             <!-- SETUP & SCORE -->
+            <button @click="showMenu=true" class="w-8 p-0 m-0 my-2 absolute right-2 bottom-2"> 
+                <img src="/cog.svg">
+            </button>
             <div class="basis-1/4">
                 <section id="mineSweeperProgress" class="px-2 ">
-                    <div class="sticky md:static flex flex-row gap-1">
-
+                    <div class="md:static flex flex-row gap-1 relative" >
                         <modal v-model="showMenu" >
-                            <template #command>
-                                <button @click="showMenu=true" class="w-8 p-0 m-0 my-2"> 
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                                    </svg>
-                                </button>
-                            </template>
                         <section id="mineSweeperSetup" v-show="showOptions" class=" rounded-md relative">
                             <span class="cursor-pointer absolute -top-2 right-0 font-bold h-[28px]" @click="showMenu = false">&times;</span>
                             <div class="text-left">Size</div>
@@ -42,8 +37,9 @@
                         <div class="bg-green-400 rounded-2xl" style="height:24px"
                             :style="`width:${Math.round(nbflags.nbflags / nbflags.nbMines * 100)}%`"></div>
                     </div>
+                <timerCard v-model="reset" class="pt-8" ></timerCard>
                 </section>
-                
+
                 <div v-if="kaboom" class="mx-auto w-32 h-40 py-2">
                     <img src="/mine.svg" alt="" class=" bg-red-600  rounded-2xl">
                 </div>
@@ -52,45 +48,43 @@
             </div>
 
             <!-- MINEFIELD -->
-            <div class="mineField">
+            <div class="mineField grow ">
                 
-                <div class="grid " :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
-                    <div>-</div>
-                    <div v-for="item in Mine.colsCount">
-                        {{ item - 1 }}
-                    </div>
-                </div>
-
-                <div v-for="(row, row_id) in Mine.minesFields" :key="row_id">
-
-                    <div class="grid h-[24px]" :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
-                        <div>{{ row_id }}</div>
-                        <div v-for="(item, item_id) in row" key:="item_id"
-                            class="cursor-pointer border-[1px] border-slate-600">
-
-                            <div @click.left="addFlag ? setflag(row_id, item_id) : setdata(row_id, item_id)"
-                                @click.right.prevent="setflag(row_id, item_id)">
-
-                                <div v-if="item.discovery == 'Hidden'" class="w-[24px] h-[24px] hiddenCell" style="">
-                                </div>
-                                <div v-if="item.discovery == 'Flagged'" class="h-[24px] hiddenCell ">
-                                    <img src="/flag.svg" alt="M" class="w-[24px] mx-auto p-1">
-                                </div>
-                                <div v-if="item.discovery == 'Discovered'">
-                                    <img v-if="item.land == 'M'" src="/mine.svg" alt="M"
-                                        class="w-[24px] h-[24px] mx-auto py-1">
-                                    <div v-if="item.land != 0 && item.land != 'M'">{{ item.land }}</div>
-                                </div>
-                            </div>
+                    <div class="grid " :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
+                        <div>-</div>
+                        <div v-for="item in Mine.colsCount">
+                            {{ item - 1 }}
                         </div>
                     </div>
 
+                    <div v-for="(row, row_id) in Mine.minesFields" :key="row_id">
+
+                        <div class="grid h-[24px]" :style="`grid-template-columns: repeat(${Mine.colsCount + 1}, 24px)`">
+                            <div>{{ row_id }}</div>
+                            <div v-for="(item, item_id) in row" key:="item_id"
+                                class="cursor-pointer border-[1px] border-slate-600">
+
+                                <div @click.left="addFlag ? setflag(row_id, item_id) : setdata(row_id, item_id)"
+                                    @click.right.prevent="setflag(row_id, item_id)">
+
+                                    <div v-if="item.discovery == 'Hidden'" class="w-[24px] h-[24px] hiddenCell" style="">
+                                    </div>
+                                    <div v-if="item.discovery == 'Flagged'" class="h-[24px] hiddenCell ">
+                                        <img src="/flag.svg" alt="M" class="w-[24px] mx-auto p-1">
+                                    </div>
+                                    <div v-if="item.discovery == 'Discovered'">
+                                        <img v-if="item.land == 'M'" src="/mine.svg" alt="M"
+                                            class="w-[24px] h-[24px] mx-auto py-1">
+                                        <div v-if="item.land != 0 && item.land != 'M'">{{ item.land }}</div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <timerCard v-model="reset" class="pt-8" ></timerCard>
 </template>
 
 <script setup lang="ts">
