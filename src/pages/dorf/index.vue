@@ -1,6 +1,8 @@
 <template>
+  <div class="bg-[#7E8848] ">
+  <!-- <div class="bg-red-400 h-2 w-full"></div> -->
   <!-- HEADER -->
-  <div class="flex my-2">
+  <div class="flex my-2 ">
     <div class="basis-1/6 flex items-center justify-center" @click="reset">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -134,16 +136,17 @@
     </div>
   </div>
   <div
-    class="absolute top-20 container flex align-center justify-center blurry w-full h-full"
+    class="absolute top-20 container flex align-center justify-center blurry w-full h-full "
     v-if="cardToDisplay != 'HIDE'"
   >
     <card :Tile="cardToDisplay" size="200" @hide="cardToDisplay = 'HIDE'"></card>
   </div>
   <about></about>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import toprow from "./toprow.vue";
 import unlock from "./unlock.vue";
 import dorficon from "./dorficon.vue";
@@ -208,6 +211,12 @@ const total = computed(() => {
 const showCard = (card: TileE): void => {
   cardToDisplay.value = card.toString();
 };
+
+onMounted(()=>{
+      document.title = 'Dorf';
+      const faviconLink = document.querySelector("link[rel='icon']") as HTMLLinkElement
+      if (faviconLink) faviconLink.href = "/flavico.svg";
+})
 </script>
 
 <style scoped>
@@ -224,4 +233,6 @@ input {
   backdrop-filter: blur(1px);
   transition: width 0.5s, height 0.5s, blur 2s;
 }
+
+
 </style>
