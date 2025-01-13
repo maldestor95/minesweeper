@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import navigationCmp from "../src/components/navigationCmp/index.vue";
 import { useRouter } from "vue-router";
-import { routes } from "./RouteTypes";
+import { routes } from "./routeTypes";
 const router = useRouter();
 
 onMounted(() => {

@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import RouteTypes from "../../RouteTypes";
+import RouteTypes from "../../routeTypes";
 import { onMounted, ref } from "vue";
 
 const router = useRouter();
@@ -56,7 +56,7 @@ const About = ref<HTMLElement>();
 onMounted(()=>{
     document.title = 'Games';
     const faviconLink = document.querySelector("link[rel='icon']") as HTMLLinkElement
-    if (faviconLink) faviconLink.href = "/meeple.svg";
+    if (faviconLink) faviconLink.href = "/mine_flavico.svg";
 })
 </script>
 <style scoped>

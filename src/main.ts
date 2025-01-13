@@ -4,7 +4,7 @@ import App from './App.vue'
 
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import {routes} from './RouteTypes'
+import {routes} from './routeTypes'
 
 const router = createRouter({
     history: createMemoryHistory(),

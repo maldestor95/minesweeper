@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto">
-        <div class="md:flex flex-row gap-4 flex-row-reverse">
+        <div class="md:flex gap-4 flex-row-reverse">
             <!-- SETUP & SCORE -->
             <button @click="showMenu=true" class="w-8 p-0 m-0 my-2 absolute right-2 bottom-2"> 
                 <img src="/cog.svg">
