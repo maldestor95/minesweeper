@@ -1,7 +1,5 @@
 <template>
-  <slot name="command" v-if="!showModal">
-    <button @click="showModal = true">Show</button>
-  </slot>
+
   <div id="myModal" class="modal" v-if="showModal">
 
     <div class="modal-content">

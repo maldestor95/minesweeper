@@ -1,6 +1,6 @@
 <template>
-  <div v-if="show" class="absolute top-0 left-0 w-full bg-[#7d8846] flex justify-center">
-    <div class="container flex flex-col gap-4 px-2">
+  <div v-if="show" class="absolute top-0 left-0 w-full bg-[#7d8846] flex justify-center ">
+    <div class="container flex flex-col gap-4 px-2 ">
       <h1 class="flex flex-row justify-around align-center py-10">
         <div>Maldestor95</div>
         <div>2023</div>
