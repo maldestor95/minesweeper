@@ -11,8 +11,10 @@ execute in CLI, on a master branch
 # Release
 V1.0 minesweeper
 V1.1 minor layout update of minesweeper
+V1.2
+- New Game: Snake
+- menu to select sologame
 
 # Roadmap:
-V2 
-- menu to select sologame
-- snake
+V2
+* split page for easier loading on vue-router
