@@ -17,32 +17,42 @@
         </div>
         <div class="basis-1/4 debug">
             <h2>
-                Score
+                Score: {{ snake.length }}
             </h2>
-            <div> {{ isBody(0,0)?'X':'Y' }}        </div>
-            <div> {{ isBody(7,7)?'X':'Y' }}        </div>
-            <button @click="left()">Left</button>      
-            <button @click="up()">Up</button>      
-            <button @click="right()">Right</button>      
-            <button @click="down()">Down</button>      
 
-            <div>Crashed?{{isCrashed}}</div>
-            <div>{{ direction }}</div>
-            <div>{{ food }}</div>
-            <div>{{ timerDelay }}</div>
+            <div class="grid grid-cols-3 w-16 hover:cursor-pointer mx-auto bg-slate-300 rounded-xl p-2 ">
+                <div></div>
+                <div @click="up()" @touchstart="up()" class="-rotate-90 hoverNavigation">></div>      
+                <div></div>
+
+                <div @click="left()" class="rotate-180 mt-1 hoverNavigation">></div>      
+                <div></div>
+                <div @click="right()" class="hoverNavigation">></div>      
+
+                <div></div>
+                <div @click="down()" class="rotate-90 ml-2 hoverNavigation" >></div>      
+                <div></div>
+            </div>
+
+            <div>Speed : {{ timerDelay }}</div>
+
+            <div v-if="isCrashed">
+                <img src="/splatSnake.svg" class="h-40 mx-auto">
+                <button @click="start">
+                    restart ?
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import {  computed, onMounted } from 'vue';
     import cell from './cell.vue';
     import {useSNAKE} from "./snake"
     import  {useKeyDown} from "../../composable/keydown"
     
-    const rowCount=15
-    const colCount=15
-    const {snake,left,up,down,right,isCrashed,food,direction,timerDelay}=useSNAKE()
+
+    const {snake,left,up,down,right,isCrashed,food,timerDelay,start}=useSNAKE()
     
     useKeyDown( [
         {'key':'ArrowUp',fn:up},
@@ -51,13 +61,8 @@
         {'key':'ArrowRight',fn:right}
     ])
     
-    onMounted(()=>{
-
-    })
-
-    const updatedSnake=computed(()=>snake.value)
     const isBody=(row:number,col:number)=>{
-        return updatedSnake.value.filter(it=>it.x==row&&it.y==col).length>0
+        return snake.value.filter(it=>it.x==row&&it.y==col).length>0
     }
     const isFood=(row:number,col:number)=>{
         return food.value?.x==row&&food.value.y==col
@@ -66,5 +71,7 @@
 </script>
 
 <style scoped>
-
+.hoverNavigation {
+    @apply hover:text-red-500 hover:font-extrabold
+}
 </style>

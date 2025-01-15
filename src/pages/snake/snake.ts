@@ -1,7 +1,7 @@
 
 // by convention, composable function names start with "use"
 
-import { computed, ref } from "vue";
+import { ref } from "vue";
 // ************************************
 class cell {
   x: number;
@@ -47,7 +47,7 @@ export class SNAKE {
 type cellType ={
    x: number, y: number, status: string 
 }
-const test=()=>{return 4}
+
 export const useSNAKE = () => {
   const isCrashed=ref(false)
   const direction=ref('left')
@@ -55,13 +55,24 @@ export const useSNAKE = () => {
   const food = ref<cellType>()
   let timerDelay=ref(800); // ms
   let timerRefresh=setTimeout(left,timerDelay.value)
-  snake.value.push({ x: 7, y: 9, status: 'body' })
-  snake.value.push({ x: 7, y: 8, status: 'body' })
-  snake.value.push({ x: 7, y: 7, status: "body" })
-  food.value={x:5,y:7,status:'food'}
-  
+  // snake.value.push({ x: 7, y: 9, status: 'body' })
+  // snake.value.push({ x: 7, y: 8, status: 'body' })
+  // snake.value.push({ x: 7, y: 7, status: "body" })
+  // food.value={x:5,y:7,status:'food'}
+  start()
 
-  function move(steps: { newX: number, newY: number }) {
+  function start(){
+    timerDelay.value =800; // ms
+    timerRefresh = setTimeout(left, timerDelay.value)
+    snake.value=[]
+    snake.value.push({ x: 7, y: 9, status: 'body' })
+    snake.value.push({ x: 7, y: 8, status: 'body' })
+    snake.value.push({ x: 7, y: 7, status: "body" })
+    food.value = { x: 5, y: 7, status: 'food' }
+    isCrashed.value=false
+    direction.value='left'
+  }
+  function move(steps: { newX: number, newY: number, callback:()=>void }) {
     // check if eating itself
     if (snake.value.filter(sn => sn.x == steps.newX && sn.y == steps.newY).length > 0) isCrashed.value = true
     if (steps.newX == 0 || steps.newX == 16 || steps.newY == 0 || steps.newY == 16) isCrashed.value=true
@@ -69,6 +80,11 @@ export const useSNAKE = () => {
     if (isCrashed.value) {
       console.log('tt')
       clearTimeout(timerRefresh)   
+    }
+    else
+    {
+      clearTimeout(timerRefresh);
+      timerRefresh = setTimeout(steps.callback, timerDelay.value);
     }
       
     snake.value.push({
@@ -94,45 +110,33 @@ export const useSNAKE = () => {
     timerDelay.value = timerDelay.value * 0.9
   }
 
-
-
   function left() {
     const newX=snake.value[snake.value.length-1].x
     const newY=snake.value[snake.value.length-1].y-1
-    move({newX,newY})
+    move({ newX, newY, callback: left})
     direction.value='left'
-    clearTimeout(timerRefresh);
-    timerRefresh=setTimeout(()=>{left()}, timerDelay.value);
+
     
   }
   function up() {
     const newX = snake.value[snake.value.length - 1].x-1
     const newY = snake.value[snake.value.length - 1].y 
-    move({ newX, newY })
+    move({ newX, newY ,callback:up})
     direction.value = 'up'
-    clearTimeout(timerRefresh);
-    timerRefresh=setTimeout(()=>{up()}, timerDelay.value);
-    
   }
   
   function down() { 
     const newX = snake.value[snake.value.length - 1].x+1
     const newY = snake.value[snake.value.length - 1].y 
-    move({ newX, newY })
+    move({ newX, newY, callback: down})
     direction.value = 'down'
-    clearTimeout(timerRefresh);
-    timerRefresh=setTimeout(()=>{down()}, timerDelay.value);
-    
   }
   
   function right() { 
     const newX = snake.value[snake.value.length - 1].x
     const newY = snake.value[snake.value.length - 1].y + 1
-    move({ newX, newY })
+    move({ newX, newY, callback:right })
     direction.value = 'right'
-    clearTimeout(timerRefresh);
-    timerRefresh=setTimeout(()=>{right()}, timerDelay.value);
-
   }
 
   return {
@@ -141,6 +145,7 @@ export const useSNAKE = () => {
     isCrashed,
     food,
     direction,
-    timerDelay
+    timerDelay,
+    start
   }
 }
